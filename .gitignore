@@ -1,7 +1,12 @@
 node_modules/
+
 client/node_modules/
 client/dist/
 client/coverage/
+client/cypress/videos/
+client/cypress/screenshots/
+client/cypress/downloads/
+
 dist/
 coverage/
 
