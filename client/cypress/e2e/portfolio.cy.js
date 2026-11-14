@@ -1,6 +1,10 @@
 
 describe('Portfolio visitor workflow', () => {
     it('navigates from Home to Projects and displays portfolio projects', () => {
+
+        // Monitor the real backend API request.
+        cy.intercept('GET', '**/api/projects').as('getProjects')
+
         // Open the portfolio.
         cy.visit('http://localhost:5173/')
 
@@ -10,14 +14,19 @@ describe('Portfolio visitor workflow', () => {
         // Navigate using the Projects link.
         cy.contains('a', 'Projects').click()
 
+        // Allow time for the cloud backend to respond.
+        cy.wait('@getProjects', {
+            requestTimeout: 120000,
+            responseTimeout: 120000
+        }).its('response.statusCode').should('eq', 200)
+
         // Confirm navigation succeeded.
         cy.get('h2').should('contain', 'Projects')
 
-        // Verify projects retrieved from the backend are displayed.
-        cy.get('.project-card', { timeout: 10000 })
+        // Verify the projects are displayed.
+        cy.get('.project-card', { timeout: 20000 })
             .should('have.length.at.least', 3)
 
-        // Check the expected project titles.
         cy.contains('h3', 'Factory Through The Ages')
             .should('be.visible')
 
@@ -27,7 +36,7 @@ describe('Portfolio visitor workflow', () => {
         cy.contains('h3', 'HM4: Climb the Tower')
             .should('be.visible')
 
-        // Keep the completed Projects page visible in the recording.
+        // Keep the finished page visible in the recording.
         cy.wait(5000)
     })
 })

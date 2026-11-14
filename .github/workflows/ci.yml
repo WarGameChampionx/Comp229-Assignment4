@@ -1,0 +1,48 @@
+
+name: Portfolio CI
+
+on:
+  push:
+    branches: [main, feature/home-update]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-and-build:
+    name: Test and Build Portfolio
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: client
+        run: npm ci
+
+      - name: Run unit tests
+        working-directory: client
+        run: npx vitest run
+
+      - name: Build production frontend
+        working-directory: client
+        run: npm run build
+
+      - name: Run Cypress E2E test
+        uses: cypress-io/github-action@v7
+        with:
+          working-directory: client
+          install: false
+          start: npm run dev -- --host 127.0.0.1
+          wait-on: http://127.0.0.1:5173
+          browser: chrome
+          spec: cypress/e2e/portfolio.cy.js
+        env:
+          VITE_API_URL: https://comp229-assignment4-s81x.onrender.com

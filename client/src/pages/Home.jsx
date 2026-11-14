@@ -33,6 +33,12 @@ export default function Home() {
           the ground up, solving difficult programming problems, and creating
           reusable tools that make future development faster and more flexible.
         </p>
+
+        <p>
+          I also develop full-stack web applications using React,
+          Node.js, Express, and MongoDB, combining responsive
+          interfaces with secure backend services.
+        </p>
       </section>
 
       {/* Quick navigation to the main portfolio sections */}
