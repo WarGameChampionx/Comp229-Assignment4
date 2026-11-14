@@ -1,9 +1,11 @@
 node_modules/
 client/node_modules/
 client/dist/
+client/coverage/
+dist/
+coverage/
 
+*.log
 .env
 .env.*
 !.env.example
-
-*.log
